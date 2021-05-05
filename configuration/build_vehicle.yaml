@@ -1,0 +1,85 @@
+# this is yaml configuration file used to illustrate construction process
+tasks:
+
+  # first step is to collect requirements for the rest of the process
+  collect_requirements:
+    implementation: src.common.requirements.Requirements
+    params:
+      product: car
+      budget: 100000
+      ammenities:
+        premium: yes
+      colors:
+        - body: orange
+        - interior1: black
+        - interior2: orange
+
+  # we now move on to the construction phase
+  begin_construction:
+    implementation: src.common.construction.Construction
+    params:
+      builders:
+        - name: GM
+          company_size: large
+          speed: fast
+          available: yes
+        - name: Custom Carz
+          company_size: small
+          speed: slow
+          available: yes
+
+  # we define parameters for each of the possible products
+  # this is where apply a simple matching rule that
+  # matches the right product to build based on the collected
+  # requirements from earlier task
+  build_product:
+    implementation: src.common.product.Product
+    params:
+      rules:
+        - type: match
+          left: tasks.collect_requirements.params.product
+          right: tasks.build_product.params.products.type
+      products:
+        - type: car
+          implementation: src.products.custom.CustomProduct
+          params:
+            width: 76
+            length: 182
+            height: 49
+            weight: 3535
+            doors: 2
+            engine: v8
+            horsepower: 520
+
+        - type: boat
+          implementation: src.products.custom.CustomProduct
+          params:
+            width: 96
+            length: 300
+            engine: v8
+            no_of_engines: 2
+            supercharger: yes
+            max_person_capacity: 11
+
+        - type: plane
+          implementation: src.products.custom.CustomProduct
+          params:
+            wingspan: 540
+            length: 300
+            engine: v8
+            wingmount: top
+            seat_count: 4
+
+  # we are going to add a new step to do the shipping
+  ship_to_client:
+    implementation: src.common.custom.CustomTask
+    params:
+      giftwrap: yes
+      clean: yes
+      overnight: yes
+
+  # final process step
+  deliver_to_client:
+    implementation: src.common.deliver.Deliver
+    params:
+      thank_the_client: yes

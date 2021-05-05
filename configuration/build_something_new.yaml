@@ -1,0 +1,28 @@
+tasks:
+  # this is our very first step of this sequence
+  step1:
+    implementation: src.common.requirements.Requirements
+    params:
+      what_to_build: car
+      engine: v8
+      body_color: red
+
+  # next step is to gather materials
+  step2:
+    implementation: src.common.product.Product
+    params:
+      rules:
+        - type: match
+          left: tasks.step1.params.what_to_build
+          right: tasks.step2.params.products.type
+      products:
+        - type: car
+          implementation: src.products.custom.CustomProduct
+          params:
+            number_of_seats: 2
+
+  # all done
+  step3:
+    implementation: src.common.deliver.Deliver
+    params:
+      thank_the_client: yes

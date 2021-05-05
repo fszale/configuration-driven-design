@@ -1,0 +1,72 @@
+# this is yaml configuration file used to illustrate construction process
+tasks:
+
+  # first step is to collect requirements for the rest of the process
+  collect_requirements:
+    implementation: src.common.requirements.Requirements
+    params:
+      product: condo
+      budget: 300000
+      ammenities:
+        bedrooms: 3
+        bathrooms: 2
+      colors:
+        - bedrooms: white
+        - bathrooms: gray
+        - kitchen: beige
+
+  # we now move on to the construction phase
+  begin_construction:
+    implementation: src.common.construction.Construction
+    params:
+      builders:
+        - name: ACME Construction
+          company_size: small
+          speed: fast
+          available: yes
+        - name: BIG TIME Construction
+          company_size: large
+          speed: slow
+          available: no
+
+  # we define parameters for each of the possible products
+  # this is where apply a simple matching rule that
+  # matches the right product to build based on the collected
+  # requirements from earlier task
+  build_product:
+    implementation: src.common.product.Product
+    params:
+      rules:
+        - type: match
+          left: tasks.collect_requirements.params.product
+          right: tasks.build_product.params.products.type
+      products:
+        - type: house
+          implementation: src.products.house.House
+          params:
+            footage: 3000
+            lot_size: 1 acre
+            basement: yes
+            garage: 2
+
+        - type: condo
+          implementation: src.products.condo.Condo
+          params:
+            footage: 1200
+            basement: no
+            garage: 1
+
+        - type: renovation
+          implementation: src.products.renovation.Renovation
+          params:
+            footage: 2700
+            remodel:
+              - kitchen
+              - bathrooms
+              - basement
+
+  # final process step
+  deliver_to_client:
+    implementation: src.common.deliver.Deliver
+    params:
+      thank_the_client: yes
