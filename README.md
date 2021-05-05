@@ -1,4 +1,4 @@
-# train-cdd
+# Configuration Driven Design
 This is the code project to support Configuration Driven Design training.
 
 1. To run on your machine please create a python run configuration in your PyCharm editor and configure it as follows:
